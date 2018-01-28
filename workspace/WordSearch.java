@@ -14,7 +14,7 @@ public class WordSearch
 
 		for(String word : words)
 		{
-			ti.addNewWord(word);
+			trie.addNewWord(word);
 		}
 		for(int i =0;i<board.length;i++)
 		{
