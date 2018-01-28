@@ -1,0 +1,202 @@
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+class Solution {
+int parsedLength =-1;
+	public String countOfAtoms(String input)
+	{
+		HashMap<String, Integer> map = new HashMap<String,Integer>();
+
+		map = recursion(input+ "#", 0);
+		TreeMap<String, Integer> sorted = new TreeMap<String, Integer>();
+		sorted.putAll(map);
+		String op = FormString(sorted);
+		//System.out.println(op);
+		return op;
+	}
+
+	private HashMap<String, Integer> recursion(String input, int it) {
+		// TODO Auto-generated method stub
+
+		HashMap<String, Integer> tempMap = new HashMap<String, Integer> ();
+		int len = input.length();
+		int i = it;
+		while(input.charAt(i)!= '#')
+		{
+
+			if(input.charAt(i) == '(')
+			{
+				parsedLength++;
+				i++;
+				HashMap<String, Integer> retMap =  recursion(input, i );
+				i = parsedLength;
+				AddToGlobalMap(retMap,tempMap);
+			}
+			else if(Character.isUpperCase(input.charAt(i)))
+			{
+				String currAtom = Character.toString(input.charAt(i));
+				parsedLength++;
+
+				int count =1;
+				int j= i+1;
+				while(Character.isLowerCase(input.charAt(j)))
+				{
+					currAtom += Character.toString(input.charAt(j));
+					j++;
+					parsedLength++;
+					i++;
+				}
+				String times = "";
+				if(Character.isDigit(input.charAt(j)))
+				{
+					while(Character.isDigit(input.charAt(j)))
+					{
+						times+=input.charAt(j);
+						j=j+1;
+						parsedLength++;
+						i++;
+					}
+					count = Integer.parseInt(times);
+				}
+
+				AddToLocalMap(tempMap, currAtom,count);
+			}
+			else if(Character.isDigit(input.charAt(i)))
+			{		
+				int j = i;
+				String times ="";
+				while(Character.isDigit(input.charAt(j)))
+				{
+					times+=input.charAt(j);
+					j=j+1;
+					parsedLength++;
+					i++;
+				}
+				int count = Integer.parseInt(times);
+
+				AddToLocalMap(tempMap, count);
+			}
+			else if(input.charAt(i) == ')')
+			{
+				if(Character.isDigit(input.charAt(i+1)))
+				{
+
+					String times = "";
+					int j = i+1;
+					while(Character.isDigit(input.charAt(j)))
+					{
+						times+=input.charAt(j);
+						j=j+1;
+						parsedLength++;
+						i++;
+					}
+					int times_value = Integer.parseInt(times);
+					AddToLocalMapTimes(tempMap,times_value);					
+				}
+				parsedLength++;
+				i++;
+				return tempMap;
+			}
+			i++;
+		}
+
+		//AddToGlobalMap(localMap1,localMap);
+		return tempMap;
+	}
+
+	private void AddToLocalMap(HashMap<String, Integer> localMap,String Key, int value) {
+
+		if(localMap.containsKey(Key))
+		{
+			Integer a = localMap.get(Key);
+			localMap.put(Key, a + value);
+		}
+		else
+		{
+			localMap.put(Key,  value);
+		}
+
+	}
+
+
+
+	private void AddToLocalMapTimes(HashMap<String, Integer> localMap,
+			int times_value) {
+		// TODO Auto-generated method stub
+		Iterator<Entry<String, Integer>> it = localMap.entrySet().iterator();
+		while (it.hasNext()) {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String,Integer> pair = (Map.Entry<String,Integer>)it.next();
+			if(localMap.containsKey(pair.getKey()))
+			{
+				localMap.put(pair.getKey(), pair.getValue() * times_value);
+
+			}
+			else
+			{
+				localMap.put(pair.getKey(), 1 * times_value);
+			}
+			//it.remove(); // avoids a ConcurrentModificationException
+		}
+
+	}
+
+	private void AddToLocalMap(HashMap<String, Integer> localMap,
+			int times_value) {
+		// TODO Auto-generated method stub
+	    Iterator<Entry<String, Integer>> it = localMap.entrySet().iterator();
+		while (it.hasNext()) {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String,Integer> pair = (Map.Entry<String,Integer>)it.next();
+			if(localMap.containsKey(pair.getKey()))
+			{
+				Integer a = localMap.get(pair.getKey()) ;
+				a += pair.getValue() * times_value ;
+				localMap.put(pair.getKey(), a);
+
+			}
+			else
+			{
+				localMap.put(pair.getKey(), pair.getValue() * times_value);
+			}
+			
+		}
+
+	}
+	private String FormString(Map<String, Integer> map) {
+		String op ="";
+		for (Map.Entry<String, Integer> entry : map.entrySet()) 
+		{
+			if(entry.getValue() !=1)
+				op+=entry.getKey()+entry.getValue();
+			else
+				op+=entry.getKey();
+		}
+		return op;
+
+	}
+
+	private void AddToGlobalMap(HashMap<String, Integer> localMap,HashMap<String, Integer> preOutput) {
+		Iterator<Entry<String, Integer>> it = localMap.entrySet().iterator();
+		while (it.hasNext()) {
+			@SuppressWarnings("unchecked")
+			Map.Entry<String,Integer> pair = (Map.Entry<String,Integer>)it.next();
+			if(preOutput.containsKey(pair.getKey()))
+			{
+				Integer a = preOutput.get(pair.getKey()) ;
+				a += pair.getValue() ;
+				preOutput.put(pair.getKey(), a);
+
+			}
+			else
+			{
+				preOutput.put(pair.getKey(), pair.getValue());
+			}
+			//it.remove(); // avoids a ConcurrentModificationException
+		}
+
+	}
+}
