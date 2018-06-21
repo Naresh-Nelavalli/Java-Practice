@@ -43,8 +43,41 @@ public class EditDistance {
 				}
 			}
 		}	
+		tracePath(table,str1,str2);
 		return table[m][n];
 		
+		
+		
+	}
+	
+	public static void tracePath(int[][] table, char[] str1, char[] str2)
+	{
+		int m = str1.length;
+		int n = str2.length;
+		while(m!=0 || n!=0)
+		{
+			if(table[m][n] == table[m-1][n-1])
+			{
+				m=m-1;
+				n=n-1;
+			}
+			else if(table[m][n] == table[m-1][n] +1)
+			{
+				m=m-1;
+				System.out.println("Deleting a character from second String --");
+			}
+			else if(table[m][n] == table[m][n-1] +1)
+			{
+				n=n-1;
+				System.out.println("Deleting a character from first String --");
+			}
+			else if(table[m][n] == table[m-1][n-1] +1)
+			{
+				m=m-1;
+				n=n-1;
+				System.out.println("Replacing a charatcer from String 1 with String 2 --");
+			}
+		}
 	}
 	
 	public static int minValue(int a, int b, int c)
