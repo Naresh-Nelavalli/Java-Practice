@@ -1,0 +1,51 @@
+import java.util.Scanner;
+
+public class LongestCommonSeq {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+		
+		System.out.println("Enter the string :");
+		String input = in.nextLine();
+		char[] inputArray = input.toCharArray();
+		System.out.println("Enter string2 :");
+		String input2 = in.nextLine();
+		char[] inputArray2 = input2.toCharArray();
+		int output = LCS(inputArray, inputArray2);
+		System.out.println("Length of Longest matching Subsequence is :" + output);
+		
+	}
+
+	private static int LCS(char[] in, char[] in2) {
+		int tab[][] = new int[in.length+1][in2.length+1];
+		for(int i = 0;i<in.length;i++)
+			tab[i][0] =0;
+		for(int i = 0;i<in2.length;i++)
+			tab[0][i] =0;
+		
+		for(int i =0;i<in.length;i++)
+		{
+			for(int j=0;j<in2.length;j++)
+			{
+				if(in[i] == in2[j])
+					tab[i+1][j+1] = tab[i][j] +1;
+				else 
+				{
+					tab[i+1][j+1] = findMax(tab[i][j+1],tab[i+1][j]);
+				}
+				System.out.print(tab[i+1][j+1] + "| ");
+			}
+			System.out.println();
+		}
+		return tab[in.length][in2.length];
+	}
+
+	private static int findMax(int i, int j) {
+		int max = i;
+		if(i < j)
+			max = j;
+		return max;
+	}
+
+}
