@@ -1,0 +1,43 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class CoinChange {
+
+	public static void main(String[] args) {
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter the numbers separated by ',' :");
+		String input = in.nextLine();
+		System.out.println("Enter the Value :");
+		String len = in.nextLine();
+		int value = Integer.parseInt(len);
+		String[] inputArray = input.split(",");
+		int [] inp = new int[inputArray.length];
+		for(int i = 0;i<inputArray.length;i++)
+		{
+			inp[i] = Integer.parseInt(inputArray[i]);
+		}
+		
+		int out = findCC(inp,value);
+		System.out.println("The max number of combinations are :" + out);
+
+	}
+
+	private static int findCC(int[] inp, int value) {
+		int tab[] = new int[value +1];
+		Arrays.fill(tab, 0);
+		tab[0] = 1;
+		
+		for(int i= 0;i<inp.length;i++)
+		{
+			for(int j=0;j<value+1;j++)
+			{
+				if(j - inp[i] >=0)
+				tab[j] = tab[j] + tab[j-inp[i]] ;
+				System.out.print( tab[j]  + " |");
+			}
+			System.out.println("");
+		}
+		return tab[value];
+	}
+
+}
