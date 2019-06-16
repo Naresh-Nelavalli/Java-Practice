@@ -1,0 +1,113 @@
+
+class Checkers {
+    int size=0;
+    public int solution(String[] B) {
+        // write your code in Java SE 8
+        int size = B.length;
+        this.size = size;
+        char [][] board = new char[size][size];
+        Position startPos = new Position(0,0);
+        for(int i=0;i<size;i++){
+            char[] row = B[i].toCharArray();
+            for (int j =0;j<size;j++) {
+                board[i][j] = row[j];
+                if (row[j] == 'O'){
+                    startPos.cols= j;
+                    startPos.rows = i;
+                }
+            }
+        }
+        return  longestSteps(board, startPos);
+
+    }
+
+    private int longestSteps(char[][] board, Position currentPosition) {
+
+        if(currentPosition == null ){
+            return  0;
+        }
+        Position pos1 = new Position(currentPosition.rows, currentPosition.cols);
+        Position  p1 = jumpLeftUpper(board,pos1);
+        int count1 =0,count2 = 0;
+        if ( p1 != null) {
+
+            count1 = 1 + longestSteps(board,p1);
+        }
+
+        pos1 = new Position(currentPosition.rows, currentPosition.cols);
+        Position p2 = jumpRightUpper(board,pos1);
+        if ( p2 != null) {
+
+            count2 = 1 + longestSteps(board,p2);
+
+        }
+
+        return Math.max(count1,count2);
+    }
+
+    private Position  jumpRightUpper(char[][] board, Position cur){
+        if ((cur.rows -1 > 0 ) && (cur.cols + 1 <  this.size)){
+            if(isHeAlladin(board, cur.rows-1, cur.cols +1)){
+                if((cur.rows -2 > 0  ) && (cur.cols + 2  <  this.size)){
+                    Position pos = new Position(cur.rows-2, cur. cols +2);
+                    if(isPositionEmpty(board, pos)){
+                        cur = new Position(pos.rows, pos.cols);
+                        return  cur;
+                    }
+                }
+            }
+        }
+        return null;
+
+    }
+
+    private Position jumpLeftUpper(char[][] board, Position cur){
+        if ((cur.rows -1 > 0 ) && (cur.cols - 1 >  0)){
+            if(isHeAlladin(board, cur.rows-1, cur.cols -1)){
+                if((cur.rows -2 >= 0  ) && (cur.cols - 2  >=  0)){
+                    Position pos = new Position(cur.rows-2, cur.cols -2);
+                    if(isPositionEmpty(board, pos)){
+                        cur = new Position(pos.getRows(),pos.getCols());
+                        return  cur;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isHeAlladin(char[][] board, int Crows, int Ccols){
+        if (board[Crows][Ccols] == 'X'){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isPositionEmpty(char[][] board, Position jafarPosition){
+
+        if(board[jafarPosition.rows][jafarPosition.cols] == '.'){
+            return true;
+        }
+        return false;
+    }
+
+    class Position{
+        private int rows =0;
+        private int cols =0;
+
+        public int getRows() {
+            return rows;
+        }
+
+        public int getCols() {
+            return cols;
+        }
+
+        Position(int rows, int cols){
+            this.rows = rows;
+            this.cols = cols;
+        }
+    }
+
+}
