@@ -1,0 +1,105 @@
+public class UniquePath {
+
+    int board [][];
+    public int solution(int [][] grid) {
+        // write your code in Java SE 8
+        int numOfZerosToGo = 0;
+        int startRow=0, startCol =0;
+        board = new int[grid.length][grid[0].length];
+        int cols = grid[0].length;
+        int rows = grid.length;
+        for (int i = 0; i < rows; i++){
+            for(int j =0; j< cols;j++){
+                board[i][j] = grid[i][j];
+                if(grid[i][j] == 0)
+                    numOfZerosToGo = numOfZerosToGo +1;
+                if(grid[i][j] == 1){
+                    startRow  = i;
+                    startCol = j;
+                }
+            }
+        }
+        return  longestSteps(startRow, startCol, numOfZerosToGo);
+
+    }
+
+    private int longestSteps(int currRows, int currCols, int numOfZerosToGo) {
+        if(!(currCols >= 0 && currCols < board[0].length) && (currRows >= 0 && currRows < board.length)){
+            return  0;
+        }
+        if (board[currRows][currCols] == 2){
+            if(numOfZerosToGo == 0)
+                return 1;
+            else
+                return 0;
+        }
+        int result = 0;
+        //Move right
+        if (board[0].length > (currCols + 1) && (board[currRows][currCols + 1] == 0  || board[currRows][currCols + 1] == 2)){
+            if(board[currRows][currCols + 1] == 0) {
+                board[currRows][currCols + 1] = 1;
+                numOfZerosToGo--;
+                result = result + longestSteps(currRows, currCols +1, numOfZerosToGo);
+                // reset to old value once you are done
+                board[currRows][currCols + 1] = 0;
+                numOfZerosToGo++;;
+            }
+            else{
+                result = result + longestSteps(currRows, currCols +1, numOfZerosToGo);
+            }
+
+        }
+        // Move Bottom
+        if (board.length > (currRows + 1) && (board[currRows + 1][currCols] == 0 || board[currRows + 1][currCols] == 2)){
+            if (board[currRows + 1][currCols] == 0) {
+                board[currRows + 1][currCols] = 1;
+                numOfZerosToGo--;
+                result = result + longestSteps(currRows + 1, currCols, numOfZerosToGo);
+                // reset to old value once you are done
+                board[currRows + 1][currCols] = 0;
+                numOfZerosToGo++;
+            }
+            else{
+                result = result + longestSteps(currRows + 1, currCols, numOfZerosToGo);
+            }
+
+        }
+
+        // Move Left
+        if (0 <= (currCols - 1) && (board[currRows][currCols - 1] == 0 || board[currRows][currCols - 1] == 2)){
+            if(board[currRows][currCols - 1] == 0) {
+                board[currRows][currCols - 1] = 1;
+                numOfZerosToGo--;
+                result = result + longestSteps(currRows, currCols - 1, numOfZerosToGo);
+                // reset to old value once you are done
+                board[currRows][currCols - 1] = 0;
+                numOfZerosToGo++;
+            }
+            else{
+                result = result + longestSteps(currRows, currCols - 1, numOfZerosToGo);
+            }
+
+        }
+
+        // Move Up
+        if (0 <= (currRows - 1) && (board[currRows - 1][currCols] == 0 || board[currRows - 1][currCols] == 2)){
+            if( board[currRows - 1][currCols] == 0 ){
+                board[currRows - 1][currCols] = 1;
+                numOfZerosToGo--;
+                result = result + longestSteps(currRows - 1, currCols, numOfZerosToGo);
+                // reset to old value once you are done
+                board[currRows - 1][currCols] = 0;
+                numOfZerosToGo++;
+            }
+            else{
+                result = result + longestSteps(currRows - 1, currCols, numOfZerosToGo);
+            }
+
+        }
+        return  result;
+    }
+
+
+
+}
+
