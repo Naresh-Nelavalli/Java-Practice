@@ -1,0 +1,96 @@
+class Solution {
+    public String nearestPalindromic(String n) {
+        String resp = checkIfSingleDigitInput(n);
+        if (resp != null) return resp;
+        // Check if number is with 1*****1 or 1******0, if so always retrun n-1 or n-2
+        // DO this with regular expression
+        resp = checkIfInputInSplFormat(n);
+        if (resp != null) return resp;
+        
+        
+        String output ="";
+        {
+            int midValue = n.length() %2 == 0 ? n.length()/2 : n.length()/2 + 1;
+            long origValue = Long.parseLong(n), firstHalf = Long.parseLong(n.substring(0,midValue));
+            long fhp = firstHalf + 1;
+            long fhm = firstHalf - 1;
+            String  secondHalf = n.substring(midValue);
+            long a = Long.parseLong(processInput(n));
+            long b = Long.parseLong(processInput(fhp + secondHalf));
+            long c = Long.parseLong(processInput(fhm + secondHalf));
+            long f1 = b;
+            if(a != origValue){
+                if (Math.abs(origValue-a) == Math.abs(origValue-b)){
+                    f1 = Math.min(a,b);
+                }else {
+                    f1 = (Math.abs(origValue - a) > Math.abs(origValue - b)) ? b : a;
+                }
+            }
+            long f2;
+            if (Math.abs(origValue-f1) == Math.abs(origValue-c)){
+                f2 = Math.min(f1,c);
+            }else {
+                f2 = (Math.abs(origValue - f1) > Math.abs(origValue - c)) ? c : f1;
+            }
+            output = String.valueOf(f2);
+            System.out.println("This are closest palindromes for :" + n + "\n" + a + ", " + b + ", "  + c);
+        }
+        return output;
+    }
+
+    private String checkIfInputInSplFormat(String n) {
+        if(n.length() - String.valueOf(Long.parseLong(n)-1).length() == 1 ) {
+            return  String.valueOf(Long.parseLong(n)-1);
+        }
+        if (n.length() - String.valueOf(Long.parseLong(n)-2).length() == 1 ){
+            return  String.valueOf(Long.parseLong(n)-2);
+        }
+        return null;
+    }
+
+    private String checkIfSingleDigitInput(String n) {
+        if(n.length() == 1){
+             if(n.equals('0')){
+                 return "1";
+             }
+             else{
+                 int resp = (Integer.parseInt(n) -1);
+                 return String.valueOf(resp);
+             }
+         }
+        return null;
+    }
+
+    private String processInput(String input){
+        int midValue = Math.round(input.length()/2);
+        String lastHalf = input.substring(0,midValue);
+        char[] charArray = lastHalf.toCharArray();
+        int length = lastHalf.length();
+        char[] newFullString = input.toCharArray();
+        for (int i = length-1; i>=0; i--) {
+            newFullString[input.length()-1-i] = charArray[i];
+        }
+        return new String(newFullString);
+    }
+
+}
+
+public class MainClass {
+    public static String stringToString(String input) {
+        return JsonArray.readFrom("[" + input + "]").get(0).asString();
+    }
+    
+    public static void main(String[] args) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        while ((line = in.readLine()) != null) {
+            String n = stringToString(line);
+            
+            String ret = new Solution().nearestPalindromic(n);
+            
+            String out = (ret);
+            
+            System.out.print(out);
+        }
+    }
+}
