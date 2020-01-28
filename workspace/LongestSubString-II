@@ -1,0 +1,53 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class Solution 
+{
+	int l;
+	 public int lengthOfLongestSubstring(String input)
+	{
+		Map <Character, Integer> charMap= new HashMap<Character,Integer>();
+		String curr="";
+		int cl = 0;
+		int k =0;
+		for(char c : input.toCharArray())
+		{
+			
+			if(charMap.containsKey(c))
+			{
+				if(cl>l)
+					l = cl;
+				int i = curr.indexOf(c);
+				curr = curr.substring(i+1);
+				curr = curr + c;
+				cl = curr.length();
+				charMap.clear();
+				i = AddCurrentChars(charMap,curr);
+				
+			}
+			else
+			{
+				curr=curr+c;
+				cl+=1;
+				charMap.put(c, k);
+			}
+			k++;
+		}
+		if(cl>l)
+			l = cl;
+		return l;
+		
+	}
+	private int AddCurrentChars(Map<Character, Integer> charMap, String curr) 
+	{
+		int i =0;
+		for(char c : curr.toCharArray())
+		{
+			charMap.put(c, i);
+			i++;
+		}
+		return i;
+		
+	}
+	
+}
