@@ -1,0 +1,42 @@
+class Solution {
+    Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+    int minCoin = Integer.MAX_VALUE;
+   public int coinChange(int[] coins, int amount){
+     
+     if(amount == 0){return 0;}
+        for(int i = 0; i< coins.length; i++){
+            if(minCoin > coins[i]){
+                minCoin = coins[i];
+            }
+            map.put(coins[i],1);
+        }
+        dp(amount, coins);
+
+        return map.get(amount) == Integer.MAX_VALUE ? -1 : map.get(amount);
+    }
+    private int dp(int amount, int[] coins){
+        if(amount < minCoin){
+            map.put(amount, Integer.MAX_VALUE);
+            return Integer.MAX_VALUE;
+        }
+        if (map.containsKey(amount)){
+            return map.get(amount);
+        }
+        int val = Integer.MAX_VALUE;
+        for(int i =0;i<coins.length;i++){
+            if(amount - coins[i] > 0) {
+                int val1 = dp(amount - coins[i], coins);
+                if (val1 < val ) {
+                    val = val1;
+                }
+            }
+        }
+        if(val!= Integer.MAX_VALUE) {
+            map.put(amount, val +1);
+        }else {
+            map.put(amount,val);
+        }
+        return map.get(amount);
+    }
+  
+}
