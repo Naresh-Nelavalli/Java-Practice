@@ -1,0 +1,29 @@
+public class MinimumPath {
+
+    public static int minPathSum(int[][] grid) {
+        int m = grid.length, n = grid[0].length;
+        int [][] mat = new int[m+1][n+1];
+
+        for(int i =0;i<=m;i++){
+            for(int j=0;j<=n;j++){
+                if(i==1 && j==1){
+                    mat[i][j] = grid[i-1][j-1];
+                    continue;
+                }
+                if(i == 0 || j == 0){
+                    mat[i][j] = Integer.MAX_VALUE;
+                }
+                else{
+                    int min = Math.min(mat[i-1][j], mat[i][j-1]);
+                    mat[i][j] = min+ grid[i-1][j-1] ;
+                }
+            }
+        }
+        return mat[m][n];
+    }
+
+    public static void main(String[] args){
+        int [][] input = new int[][]{{1,3,1},{1,5,1},{4,2,1}};
+        System.out.println(minPathSum(input));
+    }
+}
