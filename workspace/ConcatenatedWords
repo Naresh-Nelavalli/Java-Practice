@@ -1,0 +1,87 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class ConcatenatedWords
+{
+    Trie root = null;
+    public List<String> findAllConcatenatedWordsInADict(String[] words)
+    {
+        List<String> out = new ArrayList<>();
+        TrieImpl tt = new TrieImpl();
+        root = tt.root;
+        for(String word:words)
+        {
+            if(!word.isEmpty())
+                tt.addNewWord(word);
+        }
+        for(String word:words) {
+            if(dfs(word,0,0)) {
+                out.add(word);
+            }
+        }
+        return out;
+    }
+
+    private boolean dfs(String word, int curPos, int count)
+    {
+        Trie curr = root;
+        for(int i=curPos; i< word.length();i++){
+            if(curr.array[word.charAt(i) -'a'] == null ) {
+                return false;
+            }
+            if(curr.array[word.charAt(i) -'a'].isWord && dfs(word, i + 1, count +1))
+            {
+              return true;
+            }
+            curr = curr.array[word.charAt(i) -'a'];
+        }
+        return curr.isWord && count >0;
+    }
+
+
+    public static class TrieImpl
+    {
+        final Trie root = new Trie();
+
+        public void addNewWord(String newWord)
+        {
+            Trie tillNow = new Trie();
+            tillNow = addNewCharaterToTrie(newWord.charAt(0),root);
+
+            for(int i = 1;i < newWord.length();i++)
+            {
+                tillNow = addNewCharaterToTrie(newWord.charAt(i),tillNow);
+            }
+            tillNow.isWord = true;
+        }
+
+        public Trie addNewCharaterToTrie(Character cha, Trie tillNow)
+        {
+            if(tillNow.array[cha -'a'] != null)
+            {
+                return tillNow.array[cha-'a'];
+            }
+            else
+            {
+                tillNow.count +=1;
+                Trie newNode = new Trie();
+                tillNow.array[cha - 'a'] = newNode;
+                return newNode;
+            }
+
+        }
+    }
+
+    public static class Trie
+    {
+        Trie[] array;
+        boolean isWord;
+        int count;
+        Trie()
+        {   count =0;
+            array = new Trie[26];
+            isWord = false;
+        }
+
+    }
+}
