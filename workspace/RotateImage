@@ -1,0 +1,23 @@
+public class RotateImage {
+
+    public void rotate(int[][] matrix) {
+        int size = matrix.length;
+        for(int i= 0; i<size/2; i++){
+            method(matrix, i);
+        }
+    }
+
+    private void method(int[][] matrix, int offset){
+        int size = matrix.length;
+        for(int i = offset; i< size - offset-1 ; i++){
+            int t1 = matrix[offset][i];
+            int t2 = matrix[i][size-offset-1];
+            int t3 =  matrix[size - offset-1][size  -i -1];
+            int t4 = matrix[size - i-1][offset];
+            matrix[offset][i] = t4;
+            matrix[i][size-offset-1] = t1;
+            matrix[size - offset-1][size  -i -1] = t2;
+            matrix[size - i-1][offset] = t3;
+        }
+    }
+}
