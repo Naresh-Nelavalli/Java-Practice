@@ -1,0 +1,39 @@
+public class CoinChange {
+    public static int coinChange(int[] coins, int amount){
+        int[][] mat = new int[coins.length+1][amount+1];
+        for(int i=0;i<amount+1;i++){
+            mat[0][i] = Integer.MAX_VALUE;
+        }
+        for(int i=0;i<coins.length;i++){
+            for(int j=0;j<amount;j++){
+                int coin = coins[i];
+                if (j < coin){
+                    mat[i+1][j+1] = mat[i][j+1];
+                }
+                if (j+1 - coin == 0){
+                    mat[i+1][j+1] = 1;
+                    continue;
+                }
+
+                if ((j+1-coin) > 0){
+                    int val = mat[i+1][j+1-coin];
+                    if(val == Integer.MAX_VALUE){
+                        mat[i+1][j+1] = Math.min(Integer.MAX_VALUE, mat[i][j+1]);
+                        continue;
+                    }
+                    mat[i+1][j+1] = Math.min(1 + mat[i+1][j+1 - coin], mat[i][j+1]);
+                }  else{
+                    mat[i+1][j+1] = mat[i][j+1];
+                }
+            }
+        }
+        return mat[coins.length][amount] == Integer.MAX_VALUE ? -1:mat[coins.length][amount] ;
+        //return -1;
+    }
+
+    public static void main(String[] args){
+        int[] input = new int[]{2};
+        int number = 3;
+        System.out.println(coinChange(input, number));
+    }
+}
