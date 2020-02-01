@@ -1,0 +1,34 @@
+public class WildCardMatching {
+        public static boolean isMatch(String s, String p) {
+            boolean[][] dpr = new boolean[s.length()+1][p.length()+1];
+
+                for(int i=1; i<=p.length(); i++){
+                    dpr[0][i] = p.charAt(i-1)=='*' && dpr[0][i-1];
+                }
+
+            dpr[0][0] = true;
+
+            for(int i=0 ;i< s.length();i++){
+                for(int j =0;j<p.length();j++){
+                    if(s.charAt(i) == p.charAt(j) || p.charAt(j) == '?'){
+                        dpr[i+1][j+1] = dpr[i][j];
+
+                    }
+                    if(p.charAt(j) == '*'){
+
+                        dpr[i+1][j+1] = dpr[i][j+1] || dpr[i+1][j];
+                    }
+                }
+            }
+            return dpr[s.length()][p.length()];
+        }
+
+        public static void main(String args[]){
+
+            String input1 = "aab";
+            String input2 = "a*b";
+            System.out.println(isMatch(input1,input2));
+
+        }
+
+}
