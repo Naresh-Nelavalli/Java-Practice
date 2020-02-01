@@ -1,0 +1,84 @@
+class atoi {
+    boolean negativeSign = false;
+    public int myAtoi(String str) {
+
+        int i =0;
+        String number = new String();
+        while ( i < str.length() && str.charAt(i) == ' '){
+            i++;
+        }
+
+        if(!isValidStart(str, i)){return 0;}
+        // Check if its negative sign
+        if(str.charAt(i)== '-' || str.charAt(i) == '+'){
+            i++;
+        }
+
+        while( i < str.length() && isNubmere(str.charAt(i))){
+            if(number.length() == 0 && str.charAt(i) == '0'){
+                i++;
+                continue;
+            }
+            number += str.charAt(i);
+            i++;
+        }
+        if(number.length() > 10){
+            if(negativeSign){
+                return Integer.MIN_VALUE;
+            }
+            return Integer.MAX_VALUE;
+        }
+        if (number.length() > 0){
+            System.out.println("Her number value is :" + number);
+            long res =  calculateNumber(number);
+            if (res > Integer.MAX_VALUE ){
+                if(negativeSign){
+                    return Integer.MIN_VALUE;
+                }
+                return Integer.MAX_VALUE;
+            }
+            else {
+                if(negativeSign){
+                    return -1 * (int)res;
+                }
+                return (int) res;
+            }
+        }
+        return 0;
+    }
+
+    private long calculateNumber(String number) {
+        long result = 0;
+        for(int i = number.length()-1,k =0; i >= 0 ; i--,k++){
+            int digit = Character.getNumericValue(number.charAt(i));
+            result = result + digit * (long) Math.pow(10, k);
+        }
+        return result;
+    }
+
+    private boolean isNubmere(Character c){
+        if(c >= 48 && c <= 57 ) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isValidStart(String str, int i){
+        if (i >= str.length()){
+            return false;
+        }
+        if(!isNubmere(str.charAt(i)) && ((str.charAt(i) != '+') && str.charAt(i) != '-')){
+            return false;
+        }
+        if((str.charAt(i) == '+') || str.charAt(i) == '-'){
+            if (str.charAt(i) == '-'){
+                negativeSign = true;
+            }
+            if(i+1 < str.length()){
+                return isNubmere(str.charAt(i+1));
+            }
+            return false;
+        }
+        return true;
+    }
+}
