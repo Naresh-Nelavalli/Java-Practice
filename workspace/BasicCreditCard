@@ -3,11 +3,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-
 public class BasicCreditCardProcessing {
     public static void main(String[] args) {
         CreditCardProcessing creditCardProcessing = new CreditCardProcessing();
-        // Check if input is a File or Customer details.
+        // Check if input is a File or Customer details if nothing then run unit tests
         if (args.length == 1 && args[0].length() > 4) {
             if (args[0].substring(args[0].length() - 4).equals(".txt")) {
                 creditCardProcessing.processFile(args[0]);
@@ -15,18 +14,13 @@ public class BasicCreditCardProcessing {
         } else if (args.length == 3 || args.length == 4) {
             creditCardProcessing.processTransaction(args);
         } else {
-            System.out.println("Invalid input, arguments should be with input .txt file or Transaction");
-            return;
+            System.out.println("No user input source detected !! Performing Unit Tests ::");
+            creditCardProcessing.performUnitTests();
         }
-        //performUnitTests();
         creditCardProcessing.printSummaryOfAllTransactions();
-
-
     }
-
-
 }
-
+// Created this object, Otherwise need to make everything static. So segregated in to driver and function class
 class CreditCardProcessing{
     Map<String, Customer> accounts = new HashMap<>();
     // Iterate the transactions in file and process them
@@ -44,7 +38,10 @@ class CreditCardProcessing{
         }
     }
 
-    //Process each transaction based on Type.
+    /***
+     * Process each transaction based on Type.
+     * @param args
+     */
     public void processTransaction(String[] args) {
         switch (args[0]) {
             case "Add": {
@@ -68,6 +65,7 @@ class CreditCardProcessing{
                         customer.setBalance(customer.getBalance() + requestAmount);
                     }
                 } else {
+                    accounts.put(args[1], null);
                     //System.out.println("Cannot charge, Could not find customer :" + args[1]);
                 }
                 break;
@@ -78,6 +76,7 @@ class CreditCardProcessing{
                     long addedCredit = Long.parseLong(args[2].substring(1));
                     customer.setBalance(customer.getBalance() - addedCredit);
                 } else {
+                    accounts.put(args[1], null);
                     //System.out.println("Cannot Credit amount, Could not find customer :" + args[1]);
                 }
                 break;
@@ -88,7 +87,11 @@ class CreditCardProcessing{
         }
     }
 
-    // Validation is from 3rd party, Since I can Use already tested solution.
+    /***
+     * Validation is from 3rd party, Since I can Use already tested solution.
+     * @param creditCardNumber
+     * @return
+     */
     private boolean ValidCreditCardNumber(String creditCardNumber) {
         try {
             int[] ints = new int[creditCardNumber.length()];
@@ -116,9 +119,12 @@ class CreditCardProcessing{
             return false;
         }
     }
-    // For printing in sorted order, I could have choose TreeMap, so inserted records are sorted.
-    // Since hashMap is O(1) for search,  I used HashMap. Since this sorting is only needed for printing
-    // I have used additional memory O(n) for sorting on Thread Stack.
+
+   /***
+    * For printing in sorted order, I could have choose TreeMap, so inserted records are sorted.
+    * Since hashMap is O(1) for search,  I used HashMap. Since this sorting is only needed for printing
+    * I have used additional memory O(n) for sorting on Thread Stack.
+    */
     public void printSummaryOfAllTransactions() {
         Object[] keys = accounts.keySet().toArray();
         Arrays.sort(keys);
@@ -126,21 +132,30 @@ class CreditCardProcessing{
         for(Object key : keys){
             Customer customer = accounts.get(key);
             if(customer != null){
-                System.out.println( key + ": $" + customer.getBalance());
+                System.out.println( key + " :$" + customer.getBalance());
             }else{
                 System.out.println( key + " :error");
             }
         }
     }
 
-    // Unit test cases added, for TDD development
-    private void performUnitTests() {
+
+    /***
+     * Unit test cases added, for TDD development, run with -ea option to perform assertion.
+     */
+    public void performUnitTests() {
         String trans[] = new String[]{"Add Tom 4111111111111111 $1000", "Add Lisa 5454545454545454 $1000",
                 "Add Quincy 1234567890123456 $2000","Add Jim 545454 $3000","Charge Tom $500",
-                "Charge Tom $800","Charge Lisa $7", "Credit Lisa $100", "Credit Quincy $200","Credit Quincy $200"};
+                "Charge Tom $800","Charge Lisa $7", "Credit Lisa $100", "Credit Chinto $200",
+                "Credit Quincy $200"};
         for(String tran : trans){
             processTransaction(tran.split(" "));
         }
+        assert(this.accounts.get("Tom").getBalance() == 500);
+        assert(this.accounts.get("Tom").getLimit() == 1000);
+        assert(this.accounts.get("Lisa").getBalance() == -93);
+        assert(this.accounts.get("Quincy") == null);
+        assert(this.accounts.get("Chinto") == null);
     }
 }
 // Defining limit as long, as stated in the requirement that limit is always integer, not decimal.
@@ -178,5 +193,3 @@ class Customer {
         this.balance = balance;
     }
 }
-
-
