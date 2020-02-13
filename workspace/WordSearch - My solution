@@ -1,0 +1,68 @@
+class Solution {
+    String word1 = "";
+    public boolean exist(char[][] board, String word) {
+        this.word1 = word;
+        boolean found = false;
+        int rows = board.length;
+        int cols = board[0].length;
+        for(int i = 0;i< rows;i++){
+            for(int j=0;j<cols;j++){
+                if(word.charAt(0) == board[i][j] && !found){
+                    board[i][j] = '#';
+                    found  = performSearch(board, i, j, 0);
+                    board[i][j] = word.charAt(0);
+                }
+            }
+        }
+        return found;
+    }
+     private boolean performSearch(char[][] board, int i, int j, int pos) {
+        if (pos == this.word1.length()-1) {
+            return true;
+        }
+        if (i - 1 >= 0) {
+            if (board[i - 1][j] != '#' && board[i - 1][j] == this.word1.charAt(pos + 1)){
+                board[i - 1][j] = '#';
+                if (performSearch(board, i - 1, j, pos + 1)) {
+                    return true;
+                } else {
+                    board[i - 1][j] = this.word1.charAt(pos + 1);
+                }
+            }
+        }
+
+        if (i + 1 < board.length) {
+            if (board[i + 1][j] != '#' && board[i + 1][j] == this.word1.charAt(pos + 1)){
+                board[i + 1][j] = '#';
+                if (performSearch(board, i + 1, j, pos + 1)) {
+                    return true;
+                } else {
+                    board[i + 1][j] = this.word1.charAt(pos + 1);
+                }
+            }
+        }
+
+        if (j - 1 >= 0) {
+            if (board[i][j -1] != '#' && board[i][j - 1] == this.word1.charAt(pos + 1)){
+                board[i][j -1] = '#';
+                if (performSearch(board, i, j -1, pos + 1)) {
+                    return true;
+                } else {
+                    board[i][j -1] = this.word1.charAt(pos + 1);
+                }
+            }
+        }
+
+        if (j + 1 < board[0].length) {
+            if (board[i][j + 1] != '#' && board[i][j + 1] == this.word1.charAt(pos + 1)){
+                board[i][j + 1] = '#';
+                if (performSearch(board, i, j + 1, pos + 1)) {
+                    return true;
+                } else {
+                    board[i][j + 1] = this.word1.charAt(pos + 1);
+                }
+            }
+        }
+        return false;
+    }
+}
