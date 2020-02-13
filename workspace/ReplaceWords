@@ -1,0 +1,82 @@
+class Solution {
+    static Trie root = null;
+    public static String replaceWords(List<String> dict, String sentence) {
+        TrieImpl tt = new TrieImpl();
+        root = tt.root;
+        for(String word: dict){
+            if(!word.isEmpty())
+                tt.addNewWord(word);
+        }
+        StringBuilder sb = new StringBuilder();
+       String []sent = sentence.split(" ");
+        for(String currWord:sent){
+            boolean rootFound = false;
+            int i = 0;
+            Trie currTrie;
+            currTrie = root;
+            while(!rootFound && i < currWord.length()){
+                if(currTrie.array[currWord.charAt(i) - 'a']!= null) {
+                    if(currTrie.array[currWord.charAt(i) - 'a'].isWord) {
+                        rootFound = true;
+                    }else{
+                        currTrie = currTrie.array[currWord.charAt(i) - 'a'];
+                    }
+                } else{
+                    i = currWord.length();
+                }
+                i++;
+            }
+            if(rootFound){
+                sb.append(currWord.substring(0, i) + " ");
+            } else {
+                sb.append(currWord + " ");
+            }
+        }
+        return sb.toString().trim();
+    }
+    
+    public static class TrieImpl
+    {
+        final Trie root = new Trie();
+
+        public void addNewWord(String newWord)
+        {
+            Trie tillNow = new Trie();
+            tillNow = addNewCharaterToTrie(newWord.charAt(0),root);
+
+            for(int i = 1;i < newWord.length();i++)
+            {
+                tillNow = addNewCharaterToTrie(newWord.charAt(i),tillNow);
+            }
+            tillNow.isWord = true;
+        }
+
+        public Trie addNewCharaterToTrie(Character cha, Trie tillNow)
+        {
+            if(tillNow.array[cha -'a'] != null)
+            {
+                return tillNow.array[cha-'a'];
+            }
+            else
+            {
+                tillNow.count +=1;
+                Trie newNode = new Trie();
+                tillNow.array[cha - 'a'] = newNode;
+                return newNode;
+            }
+        }
+    }
+
+    public static class Trie
+    {
+        Trie[] array;
+        boolean isWord;
+        int count;
+        Trie()
+        {   count =0;
+            array = new Trie[26];
+            isWord = false;
+        }
+
+    }
+}
