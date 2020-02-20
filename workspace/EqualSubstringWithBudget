@@ -20,4 +20,18 @@ class Solution {
         }
         return max;
     }
+    
+     public static void main(String [] args){
+   
+        String a ="krpgjbjjznpzdfy";
+        String b = "nxargkbydxmsgby";
+        int maxCost = 14;
+        int val = equalSubstring(a,b,maxCost);
+        if (val == 4 ){
+            System.out.println("You have passed : " +  val);
+        }
+        else{
+            System.out.println("You Failed : " + val);
+        }
+    }
 }
