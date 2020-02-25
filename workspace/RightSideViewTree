@@ -1,0 +1,26 @@
+class Solution {
+    Map<Integer, Integer> cache = new HashMap<>();
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> resp = new LinkedList<>();
+        if(root == null){
+            return resp;
+        }
+        dfs(root, 0);
+        List<Integer> keyList = new LinkedList<>(cache.keySet());
+        Collections.sort(keyList);
+        for (Integer i: keyList) {
+            resp.add(cache.get(i));
+        }
+       return resp;
+    }
+
+    private void dfs(TreeNode root, int Y){
+        cache.put(Y, root.val);
+        if(root.left != null){
+            dfs(root.left, Y+1);
+        }
+        if(root.right != null){
+            dfs(root.right, Y+1);
+        }
+    }
+}
