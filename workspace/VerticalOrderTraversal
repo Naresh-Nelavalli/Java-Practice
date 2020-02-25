@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+     Map<Integer, List<Node>> map=new HashMap<>();
+    public  List<List<Integer>> verticalTraversal(TreeNode root){
+        List<List<Integer>> resp = new LinkedList<>();
+        traverse(0,0, root);
+        LinkedList<Integer> keyList = new LinkedList<>(map.keySet());
+        Collections.sort(keyList);
+        for (Integer i: keyList) {
+             Collections.sort(map.get(i), (a,b)-> {
+                if (a.yIndex == b.yIndex ){
+                    return a.node.val - b.node.val;
+                } else {
+                    return b.yIndex - a.yIndex;
+                }
+            });
+            LinkedList<Integer> out =  new LinkedList<>();
+            for(Node n : map.get(i)){
+                out.add(n.node.val);
+            }
+            resp.add(out);
+        }
+        return resp;
+    }
+
+    public void traverse(int X, int Y, TreeNode c){
+        List<Node> cList=map.get(X);
+        if(cList==null){
+            cList=new LinkedList<>();
+        }
+        cList.add(new Node(c, Y-1));
+        map.put(X,cList);
+        if(c.left != null){
+            traverse(X-1, Y-1, c.left);
+        }
+        if(c.right!=null){
+            traverse(X+1, Y-1, c.right);
+        }
+    }
+
+    class Node{
+        TreeNode node;
+        int yIndex;
+
+        Node(TreeNode node, int y){
+            this.node = node;
+            this.yIndex = y;
+        }
+    }
+}
