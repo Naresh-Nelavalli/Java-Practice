@@ -1,0 +1,45 @@
+ public static class TrieImpl
+    {
+        final Trie root = new Trie();
+
+        public void addNewWord(String newWord)
+        {
+            Trie tillNow = new Trie();
+            tillNow = addNewCharaterToTrie(newWord.charAt(0),root);
+
+            for(int i = 1;i < newWord.length();i++)
+            {
+                tillNow = addNewCharaterToTrie(newWord.charAt(i),tillNow);
+            }
+            tillNow.isWord = true;
+        }
+
+        public Trie addNewCharaterToTrie(Character cha, Trie tillNow)
+        {
+            if(tillNow.array[cha -'a'] != null)
+            {
+                return tillNow.array[cha-'a'];
+            }
+            else
+            {
+                tillNow.count +=1;
+                Trie newNode = new Trie();
+                tillNow.array[cha - 'a'] = newNode;
+                return newNode;
+            }
+
+        }
+    }
+
+    public static class Trie
+    {
+        Trie[] array;
+        boolean isWord;
+        int count;
+        Trie()
+        {   count =0;
+            array = new Trie[26];
+            isWord = false;
+        }
+
+    }
