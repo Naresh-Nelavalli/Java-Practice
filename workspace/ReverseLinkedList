@@ -1,0 +1,36 @@
+public class ReverseLinkedList {
+    public static Lnode reverse(Lnode head){
+        Lnode currNode = head.next;
+        Lnode prevNode = head;
+        head.next = null;
+        while(currNode.next != null){
+               Lnode temp = currNode.next;
+               currNode.next = prevNode;
+               prevNode = currNode;
+               currNode = temp;
+        }
+        currNode.next = prevNode;
+        return currNode;
+    }
+    public static  void main(String args[]){
+        Lnode first = new Lnode(1);
+        Lnode sec = new Lnode(2);
+        Lnode t3d = new Lnode(3);
+        Lnode fourth = new Lnode(4);
+        Lnode fifth = new Lnode(5);
+        first.next = sec;
+        sec.next = t3d;
+        t3d.next = fourth;
+        fourth.next = fifth;
+        fifth.next = null;
+        reverse(first);
+    }
+}
+
+class Lnode{
+    Lnode next;
+    int value;
+    Lnode(int value){
+        this.value = value;
+    }
+}
