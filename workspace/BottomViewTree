@@ -1,0 +1,41 @@
+package leetcode.tree;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class BottomViewTree{
+
+    public void printBfs(Node root){
+        Queue<LevelNode> queue = new LinkedBlockingQueue<>();
+        if (root == null){
+            System.out.println("Root is null");
+        }
+        queue.add(new LevelNode(root, 0));
+        Map<Integer, Integer> posStore = new HashMap<>();
+        while(queue.size() > 0) {
+            int nodesInLevel = queue.size();
+            for (int i = 0; i < nodesInLevel; i++) {
+                LevelNode currNode = queue.remove();
+                posStore.put(currNode.position, currNode.node.getValue());
+                if (currNode.node.getLeft() != null) {
+                    queue.add(new LevelNode(currNode.node.getLeft(), currNode.position -1));
+                }
+                if (currNode.node.getRight() != null) {
+                    queue.add(new LevelNode(currNode.node.getRight(), currNode.position +1));
+                }
+            }
+        }
+        System.out.println(posStore);
+    }
+
+    public class LevelNode{
+        Node node;
+        int position;
+        LevelNode(Node node, int position){
+            this.node = node;
+            this.position = position;
+        }
+    }
+}
