@@ -1,0 +1,46 @@
+package leetcode.tree;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class BfsTraversal {
+
+    public static  void printBfs(Node root){
+        Queue<Node> queue = new LinkedBlockingQueue<>();
+        if (root == null){
+            System.out.println("Root is null");
+        }
+        queue.add(root);
+        while(queue.size() > 0) {
+            List<Integer> levelValues = new LinkedList<>();
+            int nodesInLevel = queue.size();
+            for (int i = 0; i < nodesInLevel; i++) {
+                Node currNode = queue.remove();
+                levelValues.add(currNode.getValue());
+                if (currNode.getLeft() != null) {
+                    queue.add(currNode.getLeft());
+                }
+                if (currNode.getRight() != null) {
+                    queue.add(currNode.getRight());
+                }
+            }
+            System.out.println(levelValues);
+        }
+    }
+
+    public static void main(String[] args) {
+        Node root = new Node(1, new Node(2, null, null), new Node(3, null, null));
+
+        Node l2_l1 = new Node(4, new Node(5, null, null), new Node(6, null, null));
+        Node l2_r1 = new Node(7, new Node(8, null, null), new Node(9, null, null));
+        Node l2_l2 = new Node(10, new Node(11, null, null), new Node(12, null, null));
+        Node l2_r2 = new Node(13, new Node(14, null, null), new Node(15, null, null));
+        root.getLeft().setLeft(l2_l1);
+        root.getLeft().setRight(l2_l2);
+        root.getRight().setLeft(l2_r1);
+        root.getRight().setRight(l2_r2);
+        printBfs(root);
+    }
+}
