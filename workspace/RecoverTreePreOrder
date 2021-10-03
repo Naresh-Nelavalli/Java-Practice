@@ -1,0 +1,83 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    
+     public TreeNode recoverFromPreorder(String traversal) {
+        if (traversal == null || traversal.isEmpty()){
+            return null;
+        }
+        if (traversal.length() == 1 && traversal.equals("1")){
+            return new TreeNode(1);
+        }
+        Queue<Integer> input = splitValues(traversal);
+        TreeNode node = new TreeNode(input.remove());
+        preOrderParse(0, node, input);
+        return node;
+    }
+
+    private Queue<Integer> splitValues(String traversal) {
+        Queue<Integer> iput = new LinkedBlockingQueue<>();
+        char[] in = traversal.toCharArray();
+        String curr = "";
+        boolean isFirstH = true;
+        boolean isFirstC = true;
+        for (int i=0;i < in.length;i++){
+            if (in[i] != '-'){
+                if(!isFirstC) {
+
+                    iput.add(curr.length());
+                    isFirstC = true;
+                    curr = "";
+                }
+                isFirstH=false;
+                curr = curr + in[i];
+            } else {
+                if(!isFirstH) {
+
+                    iput.add(Integer.parseInt(curr));
+                    isFirstH = true;
+                    curr = "";
+                }
+                isFirstC = false;
+                curr =  curr + in[i];
+            }
+        }
+        iput.add(Integer.parseInt(curr));
+        return iput;
+    }
+
+    public int preOrderParse(int currentDepth, TreeNode node, Queue<Integer> input){
+        if (input.size() == 0){
+            return 0;
+        }
+        int nextNodeDepth = input.peek();
+        int leftCheck = 0;
+        if (nextNodeDepth > currentDepth){
+            input.remove();
+            TreeNode currNode = new TreeNode(input.remove());
+            node.left = currNode;
+            leftCheck = 2;
+            preOrderParse(nextNodeDepth, node.left,input);
+        }
+        if (leftCheck > 0 && input.size() > 0 && input.peek() == nextNodeDepth){
+            input.remove();
+            TreeNode currNode = new TreeNode(input.remove());
+            node.right = currNode;
+            preOrderParse(nextNodeDepth, node.right,input);
+        }
+        return leftCheck;
+    }
+}
