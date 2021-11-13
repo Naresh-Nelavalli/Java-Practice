@@ -1,0 +1,22 @@
+
+public class LinkedListInTree {
+
+
+        public boolean isSubPath(ListNode head, TreeNode root) {
+            if (runRecursive(head, root))
+                    return true;
+            return isSubPath(head, root.left) || isSubPath(head, root.right);
+        }
+
+        private boolean runRecursive(ListNode listNode, TreeNode t) {
+            if (listNode == null)
+                return true;
+            if (t == null)
+                return false;
+
+            if (t.val != listNode.val)
+                return false;
+
+            return runRecursive(listNode.next, t.left) || runRecursive(listNode.next, t.right);
+        }
+}
