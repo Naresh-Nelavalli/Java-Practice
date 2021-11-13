@@ -1,0 +1,21 @@
+public class SumLeafNumber {
+
+    public int sumNumbers(TreeNode root) {
+        if(root == null)
+            return 0;
+        if(root.left==null && root.right==null){
+            return root.val;
+        }
+        return recursiveSum(root, 0);
+    }
+
+    private int recursiveSum(TreeNode root, int val) {
+        if(root == null){
+            return 0;
+        }
+        if (root.left == null && root.right == null){
+            return val * 10 + root.val;
+        }
+        return  recursiveSum(root.left,  val* 10 + root.val) + recursiveSum(root.right,  val* 10 + root.val);
+    }
+}
