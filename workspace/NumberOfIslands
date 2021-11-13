@@ -1,0 +1,37 @@
+class Solution {
+  public int numIslands(char[][] grid) {
+
+        int resp = 0;
+        for (int i = 0; i < grid.length; i++){
+            for(int j =0; j< grid[0].length;j++){
+                if (grid[i][j] == '1'){
+                    resp = resp + 1;
+                    markEntireIsland(grid, i, j);
+                }
+            }
+        }
+        return resp;
+    }
+
+    private void markEntireIsland(char[][] grid, int rows, int cols) {
+        grid[rows][cols] = 'v';
+        //Check right
+        if(cols + 1 < grid[0].length && grid[rows][cols +1] == '1'){
+            markEntireIsland(grid, rows, cols +1 );
+        }
+        //Check bottom
+        if(rows + 1 < grid.length && grid[rows +1 ][cols] == '1'){
+            markEntireIsland(grid, rows + 1, cols);
+        }
+        
+          //Check left
+        if(cols - 1 >= 0 && grid[rows][cols -1] == '1'){
+            markEntireIsland(grid, rows, cols -1 );
+        }
+
+        //Check up
+        if (rows - 1 >= 0 && grid[rows - 1 ][cols] == '1'){
+            markEntireIsland(grid, rows - 1, cols);
+        }
+    }
+}
