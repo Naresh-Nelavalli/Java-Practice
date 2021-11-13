@@ -1,0 +1,25 @@
+package leetcode.tree;
+
+public class PathSum {
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return false;
+        return recursiveSum(root, targetSum);
+    }
+
+    private boolean recursiveSum(TreeNode root, int target) {
+        if (root.left == null && root.right == null){
+            if(target - root.val == 0)
+                return true;
+
+        }
+        if (root.left != null && recursiveSum(root.left,  target - root.val)){
+            return true;
+        }
+        if (root.right != null && recursiveSum(root.right,  target - root.val)){
+            return true;
+        }
+        return false;
+    }
+}
